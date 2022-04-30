@@ -12,8 +12,9 @@ int NRES;
  *@returns the cloned vector
  *@param vector to copy from and a vector to copy to 
  */
-int clone(int *cloning, int *clonedInto){
+int* clone(int *cloning){
     // clone here
+    int *clonedInto = malloc((NRES)*sizeof(int));
     for (int i = 0; i < NRES; i++)
     {
         clonedInto[i] = cloning[i];
@@ -31,7 +32,6 @@ bool compare(int **matrix1, int **matrix2){
     for (int i = 0; i < NPROC; i++){
         for (int j = 0; j < NRES; j++){
             if (matrix2[i][j] > matrix1[i][j]){
-                printf("Matricies are differnt...Comparison Failed!");
                 return false;
             }
         }
@@ -44,15 +44,12 @@ bool compare(int **matrix1, int **matrix2){
  *@return the total amount
  *@param a matrix 
  */
-int add(int **matrix){
-    int *total;
+int* add(int *matrix1, int *matrix2){
     // add thevectors/matrices
     for(int i = 0; i < NPROC; i++) {
-        for(int j = 0; j < NRES; j++) {
-            total[j] += matrix[i][j];
-        }
+        matrix1[i]+=matrix2[i];
     }
-    return total;
+    return matrix1;
 }
 /**
  * subtracts two matricies to determine a needed amount
@@ -60,18 +57,17 @@ int add(int **matrix){
  * @return needed matrix  
  * @param two matricies 
  */
-int subtract(int **matrix1, int **matrix2){
+int** subtract(int **matrix1, int **matrix2){
     // subtract the vectors/matrices
-    int **sumNeeded;
     for (int i = 0; i < NPROC; i++)
     {
         //create the need matrix by subtracting the max matrix by the alloc matrix
         for (int j = 0; j < NRES; j++)
         {
-            sumNeeded[i][j] = matrix1[i][j] - matrix2[i][j];
+            matrix1[j] -= matrix2[i][j];
         }
     }
-    return sumNeeded;
+    return matrix1;
 }
 /**
  *prints a vector/matrix
