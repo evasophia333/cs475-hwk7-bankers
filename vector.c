@@ -12,44 +12,64 @@ int NRES;
  *@returns the cloned vector
  *@param vector to copy from and a vector to copy to 
  */
-int* clone(int *cloning){
+int** clone(int **cloning, int resources){
     // clone here
-    int *clonedInto = malloc((NRES)*sizeof(int));
-    for (int i = 0; i < NRES; i++)
+    int **clonedInto = malloc(sizeof(int)*resources);
+    for (int i = 0; i < resources; i++)
     {
         clonedInto[i] = cloning[i];
     }
     return clonedInto;
 }
+
 /**
- * compares two vectors/matricies
  *
- *@return true if the threads do not exceed the max and false if they do exceed
- *@param two different vectors
+ *
+ *
  */
-bool compare(int **matrix1, int **matrix2){
-    // compare vectors
-    for (int i = 0; i < NPROC; i++){
-        for (int j = 0; j < NRES; j++){
-            if (matrix2[i][j] > matrix1[i][j]){
-                return false;
-            }
+bool compare(int **matrix1, int **matrix2, int processes, int resources){
+  for (int i = 0; i < processes; i++){ 
+    for (int j = 0; j < resources; j++){
+      if (matrix1[i][j] > matrix2[i][j]){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+/**
+ *
+ *
+ *
+ *
+ */
+bool compTotal(int processes, int resources, int **alloc, int **availVec){
+    for (int i = 0; i < resources; i++){ // scan in max demand matrix
+        int sumToDeter = 0;
+        for (int j = 0; j < processes; j++){
+        sumToDeter += alloc[i][j];
+        }
+        int *num = availVec[i];
+        if (sumToDeter > num){
+            return false;
         }
     }
-    return true;
+  return true;
 }
+
 /**
  * adds each of the elements of the matrix to return a total
  *
  *@return the total amount
  *@param a matrix 
  */
-int* add(int *matrix1, int *matrix2){
+int** add(int *matrix1, int *matrix2, int size){
     // add thevectors/matrices
-    for(int i = 0; i < NPROC; i++) {
-        matrix1[i]+=matrix2[i];
+    int **result = (int **)malloc(size * sizeof(int));
+    for(int i = 0; i < size; i++) {
+        result = matrix1[i]+matrix2[i];
     }
-    return matrix1;
+    return result;
 }
 /**
  * subtracts two matricies to determine a needed amount
@@ -57,17 +77,16 @@ int* add(int *matrix1, int *matrix2){
  * @return needed matrix  
  * @param two matricies 
  */
-int** subtract(int **matrix1, int **matrix2){
+int** subtract(int **matrix1, int **matrix2, int **matrix3, int processes, int resources){
     // subtract the vectors/matrices
-    for (int i = 0; i < NPROC; i++)
-    {
+    for (int i = 0; i < processes; i++){
+        matrix3[i] = (int *)malloc(processes * sizeof(int));
         //create the need matrix by subtracting the max matrix by the alloc matrix
-        for (int j = 0; j < NRES; j++)
-        {
-            matrix1[j] -= matrix2[i][j];
+        for (int j = 0; j < resources; j++){
+            matrix3[i][j]= matrix1[i][j] - matrix2[i][j];
         }
     }
-    return matrix1;
+    return matrix3;
 }
 /**
  *prints a vector/matrix
