@@ -2,9 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "vector.h"
-//globals 
-int NPROC;
-int NRES;
+
 
 /**
  * clones the elements of the first vector into another vector 
@@ -23,9 +21,9 @@ int** clone(int **cloning, int resources){
 }
 
 /**
+ *compares the size of each matrix element and returns true if one is larger than two
  *
- *
- *
+ *@return true or false
  */
 bool compare(int **matrix1, int **matrix2, int processes, int resources){
   for (int i = 0; i < processes; i++){ 
@@ -38,13 +36,16 @@ bool compare(int **matrix1, int **matrix2, int processes, int resources){
   return true;
 }
 /**
+ *compares the total sums for two matricies
  *
- *
- *
- *
+ *@param NPROC
+ *@param NRES
+  *@param allocated matrix
+ *@param availble vector 
+ *@return true if the comparison is true otherwise fasle
  */
 bool compTotal(int processes, int resources, int **alloc, int **availVec){
-    for (int i = 0; i < resources; i++){ // scan in max demand matrix
+    for (int i = 0; i < resources; i++){
         int sumToDeter = 0;
         for (int j = 0; j < processes; j++){
         sumToDeter += alloc[i][j];
@@ -92,11 +93,11 @@ int** subtract(int **matrix1, int **matrix2, int **matrix3, int processes, int r
  *prints a vector/matrix
  *
  */
-void print(int **matrix){
+void print(int **matrix, int processes, int resources){
     // print the vectors/matrices
-    for (int i = 0; i < NPROC; i++){
+    for (int i = 0; i < processes; i++){
         printf("\n");
-        for (int j = 0; j < NRES; j++){
+        for (int j = 0; j < resources; j++){
             printf("%d ", matrix[i][j]);
         }
     }

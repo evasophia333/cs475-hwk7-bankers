@@ -74,13 +74,13 @@ void isSafe(int **avail, int **alloc, int **need, int processes, int resources){
                 contLoop == true;
                 safe[num] = i; 
                 num++;
-                
-                /**
-                //this might have to come out after the while loop
+            }
+        }
+        for(int i=0; i<processes; i++){
+            if(finish[i]==1){
                 finish[i] = 0;
                 availClone = subtract(availClone, alloc[i],availClone, processes, resources);
-                num--;
-                */
+                num--;  
             }
         }
         free(finish);
